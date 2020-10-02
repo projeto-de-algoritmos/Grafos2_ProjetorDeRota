@@ -1,40 +1,13 @@
 from Graph import Graph
 from graphviz import Digraph
-from queue import PriorityQueue
-from math import inf
 import tempfile
+from menu import menu
+from funcoes import dijkstra
 
-def dijkstra(graph, root):
-    queue = PriorityQueue()  
-    path = {}  
-    for v in graph.vertices():
-        if v == root:
-            path[v] = [[], 0]  
-        else:
-            path[v] = [[], inf]  
-
-        queue.put((path[v][1], v))  
-
-    remaing_vertices = list(graph.vertices()) 
-
-    for i in range(len(graph.vertices())):
-        u = queue.get()[1]  
-        remaing_vertices.remove(u) 
-
-        for v in remaing_vertices:  
-            du = path[u][1] 
-            w = graph.direct_cost(u, v) 
-            dv = path[v][1]  
-            if du + w < dv:  
-                path[v][1] = du + w  
-                path[v][0] = path[u][0] + [u]  
-                queue.queue.remove((dv, v)) 
-                queue.put((path[v][1], v))
-
-    return path
 
 
 if __name__ == '__main__':
+    edges = menu()
 
     '''
         Capitais centro-oeste: Brasilia, Goiania, Cuiaba, Campo Grande.
@@ -49,24 +22,10 @@ if __name__ == '__main__':
 
     '''
 
-    edges = [   ('Cuiaba - MT', 'Goiania - GO', 895), 
-                ('Cuiaba - MT', 'Campo Grande - MS', 707),
-
-                ('Goiania - GO', 'Campo Grande - MS', 846), 
-                ('Goiania - GO', 'Belo Horizonte - MG', 890), 
-
-                ('Campo Grande - MG', 'Sao Paulo - SP', 1013), 
-
-                ('Sao Paulo - SP', 'Rio de Janeiro - RJ', 441), 
-                ('Sao Paulo - SP', 'Belo Horizonte - MG', 592), 
-
-                ('Belo Horizonte - MG', 'Vitoria - ES', 523), 
-
-                ('Rio de Janeiro - RJ', 'Vitoria - ES', 527)]
-
     graf = Digraph('Graf', filename='graf', node_attr={'color': 'lightblue2'}, engine='sfdp')
     graf.attr(size='100', shape='ellipse', fontsize='10', rankdir='LR')
     graf.attr('node', shape='doublecircle')
+
 
     grafCaminho = Digraph('Graf', filename='graf', node_attr={'color': 'lightblue2'}, engine='sfdp')
     grafCaminho.attr(size='100', shape='ellipse', fontsize='10', rankdir='LR')
@@ -123,4 +82,5 @@ if __name__ == '__main__':
         else:
             grafCaminho.edge(listCaminho[e], listCaminho[e + 1], color='red', constraint='false')
 
-    grafCaminho.view(tempfile.mktemp('.gv')) 
+    # grafCaminho.view(tempfile.mktemp('.gv'))
+    # grafCaminho.view()
