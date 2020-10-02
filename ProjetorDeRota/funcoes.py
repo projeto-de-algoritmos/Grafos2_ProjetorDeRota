@@ -1,5 +1,6 @@
 from queue import PriorityQueue
 from math import inf
+from graphviz import Digraph
 
 
 def criar_mapa():
@@ -49,3 +50,16 @@ def dijkstra(graph, root):
                 queue.put((path[v][1], v))
 
     return path
+
+def imagem_mapa(e):
+    mapa = Digraph('mapa', filename='mapa', node_attr={'color': 'lightblue2'}, engine='sfdp')
+    mapa.attr(size='100', shape='ellipse', fontsize='10', rankdir='LR')
+    mapa.attr('node', shape='doublecircle')
+
+    for i in e:
+        mapa.edge(i[0], i[1], label=str(i[2]), color='black', constraint='false',dir='none')
+    
+    mapa.format = 'svg'
+    mapa.view()
+    
+    input("Pressione enter para continuar...")
