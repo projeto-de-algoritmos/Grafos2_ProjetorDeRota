@@ -1,6 +1,7 @@
 import sys
 import time
-from funcoes import criar_mapa, imagem_mapa, busca_caminho
+from funcoes import criar_mapa, imagem_mapa, busca_caminho, cidades, prim
+from Graph import Grafo
 
 
 edges = [   ('Cuiaba - MT', 'Goiania - GO', 895), 
@@ -32,12 +33,12 @@ def menu():
         opcao = int(input("Digite a opção: "))
 
         if(opcao == 1 ):
-            imagem_mapa(edges)
+            imagem_mapa(edges,0,[],0,"mapa")
             mapa = edges
         
         elif (opcao == 2):
             mapa = criar_mapa()
-            imagem_mapa(mapa)
+            imagem_mapa(mapa,0,[],0,"mapa")
             
         elif (opcao == 3):
             print("Saindo...")
@@ -55,20 +56,45 @@ def menu():
     opcao = 0
     while(opcao<=0 ):
         opcao = int(input("Digite: "))
+        print('\n' * 100)
+
+        # menor caminho entre entre duas cidades(dijkstra)
         if(opcao == 1):
+            cidades(mapa)
             inicio = input("Ponto de partida(cidade): ")
             final = input("Ponto final(cidade): ")
             
             busca_caminho(inicio,[final],mapa)
 
-        
+        # passando por determinados pontos
         elif (opcao == 2):
-            pass
+            cidades(mapa)
+            entrada = input("Ponto de partida(cidade): ")
+            c = int(input("Por quantos pontos deseja passar antes do final? "))
+            final = input("Ponto final(cidade): ")
+            paradas = []
+        
+            for i in range(c):
+                cont = i+1
+                parada = input("%d° Ponto(cidade): "%cont)
+                paradas.append(parada)
+            paradas.append(final)
+
+            busca_caminho(entrada,paradas,mapa)
+
         elif(opcao == 3):
-            pass
+            cidades(mapa)
+            entrada = input("Ponto inicial(cidade): ")
+            g = Grafo({})
+            for e in mapa:
+                g.adiciona_arestas(*e)
+
+            pontos, distancia_total = prim(g, entrada)  # Retorna as arestas e o peso
+            imagem_mapa(mapa,1,pontos,distancia_total,"mapa_resultado")
+           
         else:
             opcao = 0
 
-    time.sleep(100)
+    print("\tAté mais....")
 
-    return mapa
+menu()
