@@ -1,4 +1,6 @@
+import sys
 from funcoes import criar_mapa
+
 
 edges = [   ('Cuiaba - MT', 'Goiania - GO', 895), 
             ('Cuiaba - MT', 'Campo Grande - MS', 707),
@@ -21,15 +23,24 @@ def menu():
     print("Mapa: ")
     print("1 - Para usar o mapa padrão")
     print("2 - Criar meu mapa")
-
-    opcao = int(input("Digite a opção: "))
-
-    if(opcao == 1 ):
-        return edges
+    print("3 -Sair ")
+    opcao = 0
     
-    elif (opcao == 2):
-        criar_mapa()
-        return []
-    print(opcao)
+    while(opcao <=0):
+        
+        opcao = int(input("Digite a opção: "))
 
-print(menu())
+        if(opcao == 1 ):
+            return edges
+        
+        elif (opcao == 2):
+            mapa = criar_mapa()
+            return mapa
+        elif (opcao == 3):
+            print("Saindo...")
+            # sys.exit()
+        else:
+            print("Opcao não invalida....")
+            opcao = 0
+    
+
