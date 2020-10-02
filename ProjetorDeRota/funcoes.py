@@ -1,7 +1,8 @@
 from queue import PriorityQueue
 from math import inf
 from graphviz import Digraph
-from Graph import Graph
+from Graph import Grafo
+import time
 
 
 def criar_mapa():
@@ -34,15 +35,15 @@ def dijkstra(graph, raiz):
 
         fila.put((caminho[v][1], v))  
 
-    remanescentes_vertices = list(graph.vertices()) 
+    vertices_restantes = list(graph.vertices()) 
 
     for i in range(len(graph.vertices())):
         u = fila.get()[1]  
-        remanescentes_vertices.remove(u) 
+        vertices_restantes.remove(u) 
 
-        for v in remanescentes_vertices:  
+        for v in vertices_restantes:  
             du = caminho[u][1] 
-            w = graph.direct_cost(u, v) 
+            w = graph.custo(u, v) 
             dv = caminho[v][1]  
             if du + w < dv:  
                 caminho[v][1] = du + w  
@@ -52,24 +53,36 @@ def dijkstra(graph, raiz):
 
     return caminho
 
-def imagem_mapa(e):
-    mapa = Digraph('mapa', filename='mapa', node_attr={'color': 'lightblue2'}, engine='sfdp')
+def imagem_mapa(e, opcao,listCaminho,distanciaTotal,nome_mapa):
+    mapa = Digraph(nome_mapa, filename=nome_mapa, node_attr={'color': 'lightblue2'}, engine='sfdp')
     mapa.attr(size='100', shape='ellipse', fontsize='10', rankdir='LR')
     mapa.attr('node', shape='doublecircle')
 
     for i in e:
         mapa.edge(i[0], i[1], label=str(i[2]), color='black', constraint='false',dir='none')
-    
+
+    if(opcao !=0):
+        print("----------")
+        print(listCaminho)
+        for v in range(0, len(listCaminho) - 1):
+            if v == len(listCaminho) - 2:
+                mapa.edge(listCaminho[v], listCaminho[v + 1], label=str(distanciaTotal), color='red', constraint='true')
+            else:
+                mapa.edge(listCaminho[v], listCaminho[v + 1], color='red', constraint='false')
+        
     mapa.format = 'svg'
     mapa.view()
     
-    input("Pressione enter para continuar...")
+    print("Mapa está sendo gerado aguarde...")
+    time.sleep(3)
+    input("Precione enter para continuar: ")
+    
 
 def busca_caminho(partida, parada, mapa):
     print("Busca caminho")
-    g = Graph({})
+    g = Grafo({})
     for e in mapa:
-        g.add_edge(*e)
+        g.adiciona_arestas(*e)
     
     distanciaTotal = 0
     visitados = []
@@ -92,5 +105,56 @@ def busca_caminho(partida, parada, mapa):
         for h in g:
             listCaminho.append(h)
             print("\n caminhoPercorrido lista: ", h)
+    
+    print(listCaminho)
 
-    pass
+    imagem_mapa(mapa,1,listCaminho,distanciaTotal,"mapa_resultado")
+
+
+    
+def cidades(mapa):
+    print("Cidades Cadastradas ")
+    a = []
+    for i in mapa:
+        if(not(i[0] in a)):
+            a.append(i[0])
+        if(not(i[1] in a)):
+            a.append(i[1])
+    print(a)
+
+def prim(graph, raiz):
+    vertice = [raiz]  
+    arestas_selecionadas = []  
+
+    peso = 0  
+
+    vertices_remanescentes = list(graph.vertices())  
+    vertices_remanescentes.remove(raiz)  
+
+    for i in range(len(vertices_remanescentes)):  
+        custo_minimo = inf  
+        va, vb = None, None  
+        for v1 in vertice:  
+            for v2 in vertices_remanescentes:  
+                custo = graph.custo(v1, v2)  
+                if custo < custo_minimo:  
+                    va = v1
+                    vb = v2
+                    custo_minimo = custo
+
+        if custo_minimo < inf:  
+            arestas_selecionadas.append((va, vb, custo_minimo))  
+            vertice.append(vb)  
+            vertices_remanescentes.remove(vb)  
+            peso += custo_minimo
+    
+    a = []
+    for i in arestas_selecionadas:
+        if(not(i[0] in a)):
+            a.append(i[0])
+        if(not(i[1] in a)):
+            a.append(i[1])
+    
+    caminho = a 
+    
+    return caminho, peso  
