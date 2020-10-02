@@ -1,53 +1,53 @@
 import math
 
-class Graph(object):
+class Grafo(object):
 
-    def __init__(self, graph_dict={}):
-        self.__graph_dict = graph_dict
+    def __init__(self, grafo={}):
+        self.grafo = grafo
 
     def vertices(self):
-        return list(self.__graph_dict.keys())
+        return list(self.grafo.keys())
 
-    def edges(self):
-        return self.__generate_edges()
+    def arestas(self):
+        return self.gera_arestas()
 
-    def add_vertex(self, vertex):
-        if vertex not in self.__graph_dict:
-            self.__graph_dict[vertex] = []
+    def adiciona_vertice(self, vertice):
+        if vertice not in self.grafo:
+            self.grafo[vertice] = []
 
-    def add_edge(self, *edge, bidirectional=True):
-        (vertex1, vertex2, cost) = edge
-        self.add_vertex(vertex1)
-        self.add_vertex(vertex2)
-        self.__add_edge_no_repetition(vertex1, vertex2, cost)
-        if bidirectional:
-            self.__add_edge_no_repetition(vertex2, vertex1, cost)
+    def adiciona_arestas(self, *aresta, bidirecional=True):
+        (v1, v2, custo) = aresta
+        self.adiciona_vertice(v1)
+        self.adiciona_vertice(v2)
+        self.adiciona_aresta_sem_representacao(v1, v2, custo)
+        if bidirecional:
+            self.adiciona_aresta_sem_representacao(v2, v1, custo)
 
-    def direct_cost(self, vertex1, vertex2):
-        list_v1 = self.__graph_dict[vertex1]
-        for (v, cost) in list_v1:
-            if v == vertex2:
-                return cost
+    def custo(self, v1, v2):
+        list_v1 = self.grafo[v1]
+        for (v, custo) in list_v1:
+            if v == v2:
+                return custo
         else:
             return math.inf
 
-    def __add_edge_no_repetition(self, v1, v2, cost):
-        list_v1 = self.__graph_dict[v1]
+    def adiciona_aresta_sem_representacao(self, v1, v2, custo):
+        list_v1 = self.grafo[v1]
         for i, (v, _) in enumerate(list_v1):
             if v == v2:
-                list_v1[i] = (v2, cost)
+                list_v1[i] = (v2, custo)
                 break
         else:
-            list_v1.append((v2, cost))
+            list_v1.append((v2, custo))
 
-    def __generate_edges(self):
-        edges = []
-        for vertex in self.__graph_dict:
-            for (neighbour, cost) in self.__graph_dict[vertex]:
-                if (neighbour, vertex) not in edges:
-                    edges.append((vertex, neighbour, cost))
-        return edges
+    def gera_arestas(self):
+        arestas = []
+        for vertice in self.grafo:
+            for (neighbour, custo) in self.grafo[vertice]:
+                if (neighbour, vertice) not in arestas:
+                    arestas.append((vertice, neighbour, custo))
+        return arestas
 
     def __str__(self):
-        return 'Vertices: {0}\nEdges: {1}'.format(sorted(self.vertices()), sorted(self.edges()))
+        return 'Vertices: {0}\nEdges: {1}'.format(sorted(self.vertices()), sorted(self.arestas()))
 
