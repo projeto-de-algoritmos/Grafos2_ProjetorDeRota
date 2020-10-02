@@ -1,9 +1,8 @@
 from Graph import Graph
-from graphviz import Digraph
 import tempfile
 from menu import menu
-from funcoes import dijkstra
-
+from funcoes import dijkstra, imagem_mapa
+from graphviz import Digraph
 
 
 if __name__ == '__main__':
@@ -22,10 +21,12 @@ if __name__ == '__main__':
 
     '''
 
+
     graf = Digraph('Graf', filename='graf', node_attr={'color': 'lightblue2'}, engine='sfdp')
     graf.attr(size='100', shape='ellipse', fontsize='10', rankdir='LR')
     graf.attr('node', shape='doublecircle')
 
+  
 
     grafCaminho = Digraph('Graf', filename='graf', node_attr={'color': 'lightblue2'}, engine='sfdp')
     grafCaminho.attr(size='100', shape='ellipse', fontsize='10', rankdir='LR')
@@ -57,7 +58,7 @@ if __name__ == '__main__':
         partida = i
         caminhoPercorrido.append(distance[i][0])
         distanciaTotal += int(distance[i][1])
-        
+    
     visitados.append(partida)
     caminhoPercorrido.append(parada[-1:])
 
@@ -83,4 +84,5 @@ if __name__ == '__main__':
             grafCaminho.edge(listCaminho[e], listCaminho[e + 1], color='red', constraint='false')
 
     # grafCaminho.view(tempfile.mktemp('.gv'))
-    # grafCaminho.view()
+    grafCaminho.format= 'svg'
+    grafCaminho.view()

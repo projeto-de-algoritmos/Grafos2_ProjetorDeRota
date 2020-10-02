@@ -1,6 +1,7 @@
 from queue import PriorityQueue
 from math import inf
 from graphviz import Digraph
+from Graph import Graph
 
 
 def criar_mapa():
@@ -22,34 +23,34 @@ def criar_mapa():
 
     return mapa
 
-def dijkstra(graph, root):
-    queue = PriorityQueue()  
-    path = {}  
+def dijkstra(graph, raiz):
+    fila = PriorityQueue()  
+    caminho = {}  
     for v in graph.vertices():
-        if v == root:
-            path[v] = [[], 0]  
+        if v == raiz:
+            caminho[v] = [[], 0]  
         else:
-            path[v] = [[], inf]  
+            caminho[v] = [[], inf]  
 
-        queue.put((path[v][1], v))  
+        fila.put((caminho[v][1], v))  
 
-    remaing_vertices = list(graph.vertices()) 
+    remanescentes_vertices = list(graph.vertices()) 
 
     for i in range(len(graph.vertices())):
-        u = queue.get()[1]  
-        remaing_vertices.remove(u) 
+        u = fila.get()[1]  
+        remanescentes_vertices.remove(u) 
 
-        for v in remaing_vertices:  
-            du = path[u][1] 
+        for v in remanescentes_vertices:  
+            du = caminho[u][1] 
             w = graph.direct_cost(u, v) 
-            dv = path[v][1]  
+            dv = caminho[v][1]  
             if du + w < dv:  
-                path[v][1] = du + w  
-                path[v][0] = path[u][0] + [u]  
-                queue.queue.remove((dv, v)) 
-                queue.put((path[v][1], v))
+                caminho[v][1] = du + w  
+                caminho[v][0] = caminho[u][0] + [u]  
+                fila.queue.remove((dv, v)) 
+                fila.put((caminho[v][1], v))
 
-    return path
+    return caminho
 
 def imagem_mapa(e):
     mapa = Digraph('mapa', filename='mapa', node_attr={'color': 'lightblue2'}, engine='sfdp')
@@ -63,3 +64,33 @@ def imagem_mapa(e):
     mapa.view()
     
     input("Pressione enter para continuar...")
+
+def busca_caminho(partida, parada, mapa):
+    print("Busca caminho")
+    g = Graph({})
+    for e in mapa:
+        g.add_edge(*e)
+    
+    distanciaTotal = 0
+    visitados = []
+    caminhoPercorrido = []
+    for i in parada:
+        distance = dijkstra(g, partida)
+        visitados.append(partida)
+        partida = i
+        caminhoPercorrido.append(distance[i][0])
+        distanciaTotal += int(distance[i][1])
+    
+    visitados.append(partida)
+    caminhoPercorrido.append(parada[-1:])
+
+    for g in caminhoPercorrido:
+            print("\n caminhoPercorrido lista macro: ", g)
+
+    listCaminho = []
+    for g in caminhoPercorrido:
+        for h in g:
+            listCaminho.append(h)
+            print("\n caminhoPercorrido lista: ", h)
+
+    pass
