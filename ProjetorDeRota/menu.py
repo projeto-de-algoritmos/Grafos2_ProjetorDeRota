@@ -25,7 +25,7 @@ def menu():
     print("Mapa: ")
     print("1 - Para usar o mapa padrão")
     print("2 - Criar meu mapa")
-    print("3 -Sair ")
+    print("3 - Sair ")
     opcao = 0
     
     while(opcao <=0):
