@@ -34,7 +34,7 @@ O algoritmo de Prim é um algoritmo especialmente utilizado para encontrar uma �
 
 ![menu](./img/mapa.svg)
 
-### Rota
+### Rota (com paradas)
 ![menu](./img/mapa_resultado.svg)
 
 ## Instalação 
